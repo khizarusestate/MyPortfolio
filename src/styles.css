@@ -53,3 +53,40 @@ h1 { font-size: clamp(52px, 7vw, 100px); line-height: .98; letter-spacing: -.075
   .footer-bottom { gap: 15px; flex-wrap: wrap; margin-top: 85px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Opening welcome sequence: pure black first, then red typography fades in. */
+.welcome-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: #000;
+  opacity: 1;
+  transition: opacity 800ms ease;
+}
+.welcome-copy {
+  text-align: center;
+  color: #e00018;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1100ms ease, transform 1100ms ease;
+}
+.welcome-copy p {
+  margin: 0;
+  font: 700 clamp(34px, 7vw, 76px)/1 'Manrope', sans-serif;
+  letter-spacing: .22em;
+}
+.welcome-copy span {
+  display: block;
+  margin-top: 18px;
+  font: 11px 'DM Mono', monospace;
+  letter-spacing: .42em;
+  color: #a90013;
+}
+.welcome-intro.reveal .welcome-copy,
+.welcome-intro.exit .welcome-copy { opacity: 1; transform: translateY(0); }
+.welcome-intro.exit { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .welcome-intro, .welcome-copy { transition-duration: .01ms; }
+}
