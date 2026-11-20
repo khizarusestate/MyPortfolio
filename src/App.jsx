@@ -7,15 +7,6 @@ import * as THREE from 'three'
 const MODEL_URL =
   'https://cdn.jsdelivr.net/npm/open-anatomy-3d@0.1.0/models/anatomy-male.glb'
 
-const ANATOMY_SYSTEMS = new Set([
-  'skin',
-  'skeleton',
-  'muscles',
-  'organs',
-  'vessels',
-  'nerves',
-])
-
 function HumanHead() {
   const group = useRef()
   const { scene } = useGLTF(MODEL_URL, true, true, (loader) => {
@@ -24,13 +15,31 @@ function HumanHead() {
 
   const model = useMemo(() => {
     const clone = scene.clone(true)
-
-    // Keep the outer skin surface visible and hide the internal anatomy layers.
-    clone.traverse((object) => {
-      if (ANATOMY_SYSTEMS.has(object.name)) {
-        object.visible = object.name === 'skin'
-      }
+    const skinMaterial = new THREE.MeshStandardMaterial({
+      color: '#c99478',
+      roughness: 0.82,
+      metalness: 0,
     })
+
+    // The GLB stores each body system in a direct child group.
+    // Show only the outer skin group; hide every internal anatomy layer.
+    clone.children.forEach((systemGroup) => {
+      systemGroup.visible = systemGroup.name.toLowerCase() === 'skin'
+    })
+
+    const skinGroup = clone.children.find(
+      (child) => child.name.toLowerCase() === 'skin',
+    )
+
+    if (skinGroup) {
+      skinGroup.visible = true
+      skinGroup.traverse((object) => {
+        if (object.isMesh) {
+          object.material = skinMaterial
+          object.material.side = THREE.DoubleSide
+        }
+      })
+    }
 
     const bounds = new THREE.Box3().setFromObject(clone)
     const center = bounds.getCenter(new THREE.Vector3())
