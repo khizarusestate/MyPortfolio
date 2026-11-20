@@ -1,3 +1,7 @@
 export default function App() {
-  return null
+  return (
+    <main className="welcome-screen">
+      <h1 className="welcome-text">Welcome to my Portfolio</h1>
+    </main>
+  )
 }
