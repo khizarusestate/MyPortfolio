@@ -17,22 +17,26 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 .vps-item{color:#8b9cff;--spark-start-x:-99px;--spark-delay:4.05s}
 .github-item{color:#f4f4f4;--spark-start-x:-198px;--spark-delay:4.75s}
 .welcome-text{margin:0;color:#fff;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;text-align:right;transform:translate(-192px,80px);opacity:0}
+.welcome-text::after{content:"|";display:inline-block;margin-left:4px;font-weight:400;animation:cursor-blink 900ms steps(2,start) infinite}
 .copyright-text{position:absolute;right:16px;bottom:14px;left:16px;margin:0;color:#fff;font-family:'Poppins',sans-serif;font-size:12px;font-weight:400;text-align:center;opacity:0}
 .welcome-screen.is-ready .model-background{animation:welcome-fade-in 1.4s ease forwards}
 .welcome-screen.is-ready .welcome-text,.welcome-screen.is-ready .copyright-text{animation:welcome-fade-in 1.4s ease 6.55s forwards}
 .welcome-screen.is-ready .tech-icons{animation:welcome-fade-in 500ms ease forwards}
-.welcome-screen.is-ready .icon-star{animation:spark-travel 850ms cubic-bezier(.2,.8,.25,1) var(--spark-delay) both,spark-fade 350ms ease 5.65s both}
-.welcome-screen.is-ready .react-item .icon-star{animation:react-spark-travel 850ms cubic-bezier(.2,.8,.25,1) 0.6s both,spark-fade 350ms ease 5.65s both}
-.welcome-screen.is-ready .tech-icon{animation:icon-materialize 600ms cubic-bezier(.2,.8,.25,1) 5.85s both}
+.welcome-screen.is-ready .icon-star{animation:spark-travel 850ms cubic-bezier(.16,1,.3,1) var(--spark-delay) both,spark-fade 350ms ease 5.65s both}
+.welcome-screen.is-ready .react-item .icon-star{animation:react-spark-travel 850ms cubic-bezier(.16,1,.3,1) 0.6s both,spark-fade 350ms ease 5.65s both}
+.welcome-screen.is-ready .tech-icon{animation:icon-materialize 600ms cubic-bezier(.2,.8,.25,1) 5.85s both,icon-idle 5s ease-in-out 6.5s infinite}
+.welcome-screen.is-exiting .welcome-overlay,.welcome-screen.is-exiting .model-background{animation:screen-exit 700ms ease-in forwards!important}
 @keyframes spark-travel{
 0%{opacity:0;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(.15);background:#fff;box-shadow:0 0 0 0 #fff}
 18%{opacity:1;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(1.7);background:#fff;box-shadow:0 0 10px 5px #fff,0 0 30px 15px currentColor,0 0 65px 30px currentColor}
+48%{opacity:1;transform:translate(-50%,-50%) scale(1.35);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 32px 16px currentColor,0 0 58px 27px currentColor}
 78%{opacity:1;transform:translate(-50%,-50%) scale(1.25);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 100%{opacity:1;transform:translate(-50%,-50%) scale(1);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 }
 @keyframes react-spark-travel{
 0%{opacity:0;transform:translate(-50%,-50%) scale(.15);background:currentColor;box-shadow:0 0 0 0 currentColor}
 18%{opacity:1;transform:translate(-50%,-50%) scale(1.7);background:currentColor;box-shadow:0 0 10px 5px currentColor,0 0 30px 15px currentColor,0 0 65px 30px currentColor}
+48%{opacity:1;transform:translate(-50%,-50%) scale(1.35);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 32px 16px currentColor,0 0 58px 27px currentColor}
 78%{opacity:1;transform:translate(-50%,-50%) scale(1.25);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 100%{opacity:1;transform:translate(-50%,-50%) scale(1);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 }
@@ -42,6 +46,9 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 65%{opacity:1;transform:scale(1.12) rotate(4deg);filter:brightness(1.8) drop-shadow(0 0 22px currentColor) drop-shadow(0 0 35px currentColor)}
 100%{opacity:1;transform:scale(1) rotate(0);filter:drop-shadow(0 0 7px currentColor) drop-shadow(0 0 15px currentColor)}
 }
+@keyframes icon-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes cursor-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes screen-exit{from{opacity:1}to{opacity:0}}
 @keyframes welcome-fade-in{from{opacity:0}to{opacity:1}}
 @media(max-width:600px){
 .model-background{width:58%}
