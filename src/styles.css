@@ -57,6 +57,9 @@ body {
 
 .welcome-copy {
   position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 22px;
   top: 50%;
   right: 6%;
   width: max-content;
@@ -71,7 +74,7 @@ body {
   justify-content: flex-end;
   gap: 22px;
   margin-right: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
   transform: translateX(-100px);
   opacity: 0;
 }
@@ -103,7 +106,7 @@ body {
   font-size: 13px;
   font-weight: 700;
   text-align: right;
-  transform: translate(-130px, 80px);
+  transform: translateX(-130px);
   opacity: 0;
 }
 
@@ -150,7 +153,7 @@ body {
   .tech-icons {
     gap: 12px;
     margin-right: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 
   .tech-icon {
