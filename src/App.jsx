@@ -1,24 +1,25 @@
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useAnimations, useGLTF } from '@react-three/drei'
 
 const MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
-function HumanCharacter() {
+function HumanCharacter({ onLoaded }) {
   const group = useRef()
-  // Let drei configure its built-in Draco and Meshopt decoders.
+  // The component mounts only after the GLB and its required assets are ready.
   const { scene, animations } = useGLTF(MODEL_URL)
   const { actions } = useAnimations(animations, group)
 
   useEffect(() => {
     const idle = actions.Idle ?? Object.values(actions)[0]
     idle?.reset().fadeIn(0.7).play()
+    onLoaded()
 
     return () => {
       idle?.fadeOut(0.3)
     }
-  }, [actions])
+  }, [actions, onLoaded])
 
   useFrame(({ clock }) => {
     if (!group.current) return
@@ -50,7 +51,7 @@ function SceneLighting() {
   )
 }
 
-function ModelScene() {
+function ModelScene({ onLoaded }) {
   return (
     <Canvas
       className="human-canvas"
@@ -62,7 +63,7 @@ function ModelScene() {
       <SceneLighting />
       <CameraAim />
       <Suspense fallback={null}>
-        <HumanCharacter />
+        <HumanCharacter onLoaded={onLoaded} />
       </Suspense>
     </Canvas>
   )
@@ -71,10 +72,13 @@ function ModelScene() {
 useGLTF.preload(MODEL_URL)
 
 export default function App() {
+  const [modelLoaded, setModelLoaded] = useState(false)
+  const handleModelLoaded = () => setModelLoaded(true)
+
   return (
-    <main className="welcome-screen">
+    <main className={`welcome-screen${modelLoaded ? ' is-ready' : ''}`}>
       <div className="model-background" aria-hidden="true">
-        <ModelScene />
+        <ModelScene onLoaded={handleModelLoaded} />
       </div>
       <div className="welcome-overlay">
         <h1 className="welcome-text">Press Enter to Continue</h1>
