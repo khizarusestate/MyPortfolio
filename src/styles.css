@@ -67,3 +67,74 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 .welcome-text{font-size:12px}
 .copyright-text{font-size:10px}
 }
+
+
+/* Cinematic portfolio main menu */
+.portfolio-menu{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;padding:4.2vh 6.2vw 3vh;color:#f4f5f8;text-align:left;background:linear-gradient(90deg,rgba(3,7,13,.88) 0%,rgba(4,9,17,.72) 42%,rgba(5,10,18,.38) 100%),linear-gradient(0deg,rgba(0,0,0,.68),transparent 34%,rgba(0,0,0,.22));opacity:0;visibility:hidden;pointer-events:none;transition:opacity .85s ease,visibility .85s}
+.portfolio-menu.is-visible{opacity:1;visibility:visible;pointer-events:auto}
+.menu-header{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.menu-heading{display:flex;flex-direction:column;gap:5px}
+.menu-kicker,.feature-overline{font-size:10px;letter-spacing:.28em;color:#a9b6c8;font-weight:600}
+.menu-heading h2{margin:0;font-size:clamp(25px,3vw,42px);line-height:1.05;letter-spacing:-.045em;font-weight:700}
+.menu-player{display:flex;align-items:center;gap:10px;padding:12px 17px;background:rgba(155,174,202,.09);border:1px solid rgba(200,215,235,.1);font-size:9px;letter-spacing:.16em;color:#d4dce8}
+.player-dot{width:7px;height:7px;border-radius:50%;background:#76d7b1;box-shadow:0 0 10px #76d7b1}
+.menu-tabs{display:flex;align-items:center;gap:clamp(10px,2vw,29px);margin-top:3.5vh;border-bottom:1px solid rgba(220,230,245,.15);min-height:43px}
+.menu-shoulder{font-size:12px;color:#9aa8ba;opacity:.7}
+.menu-tab{position:relative;align-self:stretch;padding:0 2px;border:0;background:transparent;color:#aab3c1;font:600 clamp(9px,.85vw,12px) 'Poppins',sans-serif;letter-spacing:.1em;cursor:pointer;transition:color .25s ease}
+.menu-tab::after{content:"";position:absolute;right:0;bottom:-1px;left:0;height:3px;background:#ed2868;box-shadow:0 0 13px rgba(237,40,104,.65);transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+.menu-tab:hover,.menu-tab.is-active{color:#fff}
+.menu-tab.is-active::after{transform:scaleX(1)}
+.menu-main{display:grid;grid-template-columns:minmax(240px, .78fr) minmax(280px,1.22fr);gap:clamp(30px,7vw,110px);align-items:center;flex:1;min-height:0;padding:4vh 0 3vh}
+.menu-options{display:flex;flex-direction:column;gap:5px;max-width:440px}
+.menu-option{position:relative;display:flex;align-items:center;gap:15px;width:100%;min-height:49px;padding:0 17px;border:1px solid transparent;background:rgba(6,12,22,.18);color:#c4ccd7;text-align:left;font:500 clamp(12px,1.05vw,15px) 'Poppins',sans-serif;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease,transform .25s ease}
+.menu-option:hover{color:#fff;background:rgba(255,255,255,.07)}
+.menu-option.is-selected{color:#fff;background:linear-gradient(90deg,rgba(190,28,79,.88),rgba(130,23,59,.64));border-color:rgba(255,115,157,.22);box-shadow:0 5px 25px rgba(0,0,0,.18);transform:translateX(5px)}
+.option-index{font-size:9px;letter-spacing:.12em;color:#8794a6}
+.menu-option.is-selected .option-index{color:#ffc2d3}
+.option-arrow{margin-left:auto;font-size:23px;line-height:1;color:#fff;opacity:0;transform:translateX(-5px);transition:all .25s}
+.menu-option.is-selected .option-arrow{opacity:1;transform:translateX(0)}
+.menu-feature{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:270px;max-width:590px;padding:clamp(24px,4vw,54px);border:1px solid rgba(198,215,237,.16);background:linear-gradient(135deg,rgba(24,37,54,.65),rgba(7,13,22,.36));backdrop-filter:blur(7px);box-shadow:0 22px 70px rgba(0,0,0,.2);transition:border-color .3s,box-shadow .3s}
+.menu-feature.is-confirmed{border-color:rgba(255,75,130,.58);box-shadow:0 0 35px rgba(225,36,97,.14),0 22px 70px rgba(0,0,0,.2)}
+.feature-overline{font-size:9px;color:#d6a4b6}
+.feature-rule{width:48px;height:2px;margin:19px 0 22px;background:#ed2868;box-shadow:0 0 12px rgba(237,40,104,.7)}
+.menu-feature h3{margin:0 0 12px;font-size:clamp(24px,3.2vw,43px);line-height:1.1;letter-spacing:-.04em;font-weight:600}
+.menu-feature p{max-width:390px;margin:0;color:#b8c2d0;font-size:clamp(11px,1vw,14px);line-height:1.9}
+.feature-detail{margin-top:24px;color:#8fa5bb;font-size:9px;letter-spacing:.14em}
+.feature-bottom{display:flex;justify-content:space-between;margin-top:38px;padding-top:13px;border-top:1px solid rgba(220,230,245,.12);color:#758398;font-size:8px;letter-spacing:.18em}
+.menu-footer{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;border-top:1px solid rgba(220,230,245,.15);padding-top:16px}
+.menu-footer>p{max-width:380px;margin:0;color:#82cfc9;font-size:11px;line-height:1.6}
+.menu-controls{display:flex;align-items:center;justify-content:flex-end;gap:17px;flex-wrap:wrap;color:#c0c9d5;font-size:8px;letter-spacing:.12em}
+.menu-controls span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.menu-controls kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:19px;padding:0 5px;border:1px solid rgba(225,235,248,.3);border-radius:2px;background:rgba(255,255,255,.06);color:#fff;font:600 9px 'Poppins',sans-serif}
+.menu-controls .menu-hint{color:#8b9aae}
+@media(max-width:700px){
+.portfolio-menu{padding:24px 20px 20px;background:linear-gradient(90deg,rgba(3,7,13,.88),rgba(4,9,17,.68)),linear-gradient(0deg,rgba(0,0,0,.78),transparent)}
+.menu-header{align-items:flex-start}
+.menu-heading h2{font-size:27px}
+.menu-kicker{font-size:8px}
+.menu-player{padding:9px;font-size:7px;letter-spacing:.08em}
+.menu-tabs{gap:11px;margin-top:26px;overflow-x:auto;min-height:39px}
+.menu-tab{font-size:8px;white-space:nowrap}
+.menu-shoulder{display:none}
+.menu-main{grid-template-columns:1fr;gap:18px;align-content:center;padding:22px 0;overflow-y:auto}
+.menu-options{gap:4px}
+.menu-option{min-height:42px;padding:0 12px;font-size:12px}
+.menu-feature{min-height:175px;padding:20px}
+.feature-rule{margin:12px 0}
+.menu-feature h3{font-size:25px}
+.menu-feature p{font-size:10px;line-height:1.6}
+.feature-detail{margin-top:13px;font-size:8px}
+.feature-bottom{margin-top:17px}
+.menu-footer{align-items:flex-start;flex-direction:column;gap:12px;padding-top:12px}
+.menu-footer>p{font-size:9px}
+.menu-controls{justify-content:flex-start;gap:9px 12px;font-size:7px}
+.menu-controls kbd{min-width:17px;height:17px;font-size:8px}
+}
+@media(max-height:620px) and (min-width:701px){
+.portfolio-menu{padding-top:18px;padding-bottom:15px}
+.menu-tabs{margin-top:15px;min-height:35px}
+.menu-main{padding:12px 0;gap:35px}
+.menu-option{min-height:39px}
+.menu-feature{min-height:210px;padding:24px}
+.feature-bottom{margin-top:20px}
+}
