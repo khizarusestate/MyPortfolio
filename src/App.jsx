@@ -82,7 +82,25 @@ export default function App() {
       </div>
       <div className="welcome-overlay">
         <div className="welcome-copy">
-          <h2 className="welcome-heading">Welcome to My World</h2>
+          <div className="tech-icons" aria-label="React, Node.js and MongoDB">
+          <svg className="tech-icon react-icon" viewBox="0 0 48 48" role="img" aria-label="React">
+            <circle cx="24" cy="24" r="3.2" fill="currentColor" />
+            <g fill="none" stroke="currentColor" strokeWidth="1.8">
+              <ellipse cx="24" cy="24" rx="20" ry="7.8" />
+              <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(60 24 24)" />
+              <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(120 24 24)" />
+            </g>
+          </svg>
+          <svg className="tech-icon node-icon" viewBox="0 0 48 48" role="img" aria-label="Node.js">
+            <path d="M24 3.8 42 14.2v19.6L24 44.2 6 33.8V14.2L24 3.8Z" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
+            <text x="24" y="27" textAnchor="middle" fontSize="10" fontWeight="700" fill="currentColor">node</text>
+            <text x="24" y="35" textAnchor="middle" fontSize="6.5" fontWeight="700" fill="currentColor">JS</text>
+          </svg>
+          <svg className="tech-icon mongo-icon" viewBox="0 0 48 48" role="img" aria-label="MongoDB">
+            <path d="M24 4.5c-1.8 6.3-10.4 11.2-10.4 22.1 0 7.7 4.2 12.7 9 14.4l1.4 3.1 1.4-3.1c4.8-1.7 9-6.7 9-14.4C34.4 15.7 25.8 10.8 24 4.5Z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+            <path d="M24 13v28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </div>
           <h1 className="welcome-text">Press Enter to Continue</h1>
         </div>
         <p className="copyright-text">© 2026 Khizar Hayat<br />All Rights Reserved.</p>
