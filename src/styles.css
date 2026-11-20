@@ -10,7 +10,13 @@ body,
   margin: 0;
 }
 
+html,
+body,
+#root {
+  min-height: 100vh;
+  background: #000;
+}
+
 body {
   min-width: 320px;
-  background: #fff;
 }
