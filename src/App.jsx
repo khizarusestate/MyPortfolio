@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -48,12 +48,42 @@ function Character({ onLoaded }) {
   )
 }
 
-function ModelScene({ onLoaded }) {
+
+const CAMERA_VIEWS = [
+  { position: [0, 1.43, 1.05], target: [0, 1.55, 0] },
+  { position: [-0.24, 1.44, 1.025], target: [0, 1.55, 0] },
+  { position: [0.25, 1.43, 1.02], target: [0, 1.54, 0] },
+  { position: [0.10, 1.57, 1.04], target: [0, 1.52, 0] },
+  { position: [-0.13, 1.37, 1.04], target: [0, 1.56, 0] },
+  { position: [0.29, 1.47, 1.00], target: [0, 1.55, 0] },
+]
+
+function CameraRig({ view }) {
+  const { camera } = useThree()
+  const targetPosition = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].position))
+  const targetLookAt = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].target))
+  const currentLookAt = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].target))
+
+  useEffect(() => {
+    const preset = CAMERA_VIEWS[view] ?? CAMERA_VIEWS[0]
+    targetPosition.current.set(...preset.position)
+    targetLookAt.current.set(...preset.target)
+  }, [view])
+
+  useFrame(() => {
+    camera.position.lerp(targetPosition.current, 0.045)
+    currentLookAt.current.lerp(targetLookAt.current, 0.045)
+    camera.lookAt(currentLookAt.current)
+  })
+
+  return null
+}
+
+function ModelScene({ onLoaded, cameraView }) {
   return (
     <Canvas
       className="human-canvas"
       camera={{ position: [0, 1.43, 1.05], fov: 20.5, near: 0.01, far: 20 }}
-      onCreated={({ camera }) => camera.lookAt(0, 1.55, 0)}
       dpr={[1, 1.35]}
       shadows={false}
       gl={{
@@ -64,6 +94,7 @@ function ModelScene({ onLoaded }) {
         toneMappingExposure: 1.05,
       }}
     >
+      <CameraRig view={cameraView} />
       <color attach="background" args={['#000000']} />
       <ambientLight intensity={0.75} />
       <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
@@ -173,7 +204,7 @@ export default function App() {
   return (
     <main className="welcome-screen">
       <div className="model-background" aria-hidden="true">
-        <ModelScene onLoaded={handleModelLoaded} />
+        <ModelScene onLoaded={handleModelLoaded} cameraView={activeCategory} />
       </div>
       <div className="welcome-overlay">
         <div className="welcome-copy">
