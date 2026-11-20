@@ -101,6 +101,7 @@ export default function App() {
       const screen = document.querySelector('.welcome-screen')
       if (!screen?.classList.contains('is-ready') || screen.classList.contains('is-exiting')) return
       screen.classList.add('is-exiting')
+      window.setTimeout(() => screen.classList.add('is-model-centering'), 700)
     }
 
     window.addEventListener('keydown', handleEnter)
