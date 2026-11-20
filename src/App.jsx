@@ -51,12 +51,12 @@ function Character({ onLoaded }) {
 
 const CAMERA_VIEWS = [
   // Each menu category gets its own camera angle and focal length.
-  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 20.5 },
-  { position: [-1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 23 },
-  { position: [1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 17.5 },
-  { position: [0, 2.02, 0.9], target: [0, 1.48, 0], fov: 21.5 },
-  { position: [0, 0.94, 0.9], target: [0, 1.58, 0], fov: 18.5 },
-  { position: [1.28, 1.52, 0.55], target: [0, 1.55, 0], fov: 24 },
+  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 20.5 }, // OVERVIEW: front
+  { position: [-1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 23 }, // ABOUT
+  { position: [1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 17.5 }, // PROJECTS
+  { position: [0, 1.43, -1.05], target: [0, 1.55, 0], fov: 20.5 }, // SKILLS: rear view
+  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 26.5 }, // EXPERIENCE: default angle, zoomed out
+  { position: [1.28, 1.52, 0.55], target: [0, 1.55, 0], fov: 24 }, // CONTACT
 ]
 
 function CameraRig({ view }) {
