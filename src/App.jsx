@@ -65,12 +65,10 @@ function ModelScene({ onLoaded }) {
       }}
     >
       <color attach="background" args={['#000000']} />
-      <ambientLight intensity={0.68} />
-      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.72} />
-      <directionalLight position={[-2.5, 4, 4]} intensity={1.65} color="#fff0e5" />
-      <directionalLight position={[3, 1.5, 2]} intensity={0.55} color="#8eafff" />
-      <pointLight position={[-1.35, 2.65, -1.7]} intensity={2.1} color="#527cff" distance={5} decay={2} />
-      <pointLight position={[1.5, 2.2, -1.4]} intensity={1.15} color="#8c9dff" distance={4.5} decay={2} />
+      <ambientLight intensity={0.75} />
+      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
+      <directionalLight position={[-2.5, 4, 4]} intensity={1.8} color="#fff0e5" />
+      <directionalLight position={[3, 1.5, 2]} intensity={0.65} color="#8eafff" />
       <Suspense fallback={null}>
         <Character onLoaded={onLoaded} />
       </Suspense>
