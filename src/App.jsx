@@ -82,7 +82,7 @@ export default function App() {
       </div>
       <div className="welcome-overlay">
         <h1 className="welcome-text">Press Enter to Continue</h1>
-        <p className="copyright-text">© 2026 All Rights Reserved.</p>
+        <p className="copyright-text">© 2026<br />All Rights Reserved.</p>
       </div>
     </main>
   )
