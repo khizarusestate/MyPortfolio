@@ -26,7 +26,7 @@ function HumanHead() {
     if (!group.current) return
     const time = clock.elapsedTime
     const breath = Math.sin(time * 1.05) * 0.009
-    group.current.position.y = breath
+    group.current.position.y = -0.13 + breath
     group.current.rotation.y = Math.sin(time * 0.2) * 0.012
     group.current.rotation.x = Math.sin(time * 1.05) * 0.004
   })
