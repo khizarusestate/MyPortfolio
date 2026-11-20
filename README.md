@@ -2,12 +2,11 @@
 
 A premium, interactive personal portfolio built with React, Vite, Three.js and React Three Fiber.
 
-## Planned experience
-- Cinematic hero with an animated 3D character placeholder
-- Camera presets: front, back, left, right, top and bottom
-- Subtle idle / breathing motion (placeholder animation until the final scanned model is ready)
-- About, experience, skills, projects and contact sections
-- Responsive layout, accessible controls and reduced-motion support
+## Current experience
+- Cinematic black hero screen with a realistic animated male 3D character
+- Character includes textured skin, facial features, eyes, hair and a formal outfit
+- Subtle idle animation with natural body movement
+- Responsive layout and interface transitions
 
 ## Tech stack
 - React + Vite
@@ -31,8 +30,12 @@ npm run build
 npm run preview
 ```
 
-## 3D model integration
-The hero currently uses a lightweight procedural placeholder. When the personal scan is ready, export it as GLB/GLTF and replace the placeholder scene. Keep the model's origin near the feet and use meters consistently where possible.
+## 3D character attribution
+The hero character is Daniel (formal outfit) from Avatar Studio:
+https://github.com/memoriesrohit/avatar-studio
+
+Avatar Studio code is MIT licensed. The character models and motion capture are from the Microsoft Rocketbox Avatar Library and are distributed under the MIT licence. Copyright © Microsoft Corporation. See the upstream repository's LICENSE and THIRD_PARTY_NOTICES.md for the full notices:
+https://github.com/memoriesrohit/avatar-studio
 
 ## Project status
-Initial scaffold. Portfolio content and final 3D scan will be added in later iterations.
+The cinematic hero and 3D character are integrated. Portfolio content sections will be added in later iterations.
