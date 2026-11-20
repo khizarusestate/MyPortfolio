@@ -138,3 +138,11 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 .menu-feature{min-height:210px;padding:24px}
 .feature-bottom{margin-top:20px}
 }
+
+/* Keep the original scene untouched behind the menu */
+.portfolio-menu{background:transparent!important}
+.menu-main{grid-template-columns:minmax(260px,440px);align-items:center}
+.menu-options{width:100%;max-width:440px}
+@media(max-width:700px){
+.menu-main{grid-template-columns:minmax(0,1fr)}
+}
