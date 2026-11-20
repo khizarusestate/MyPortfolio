@@ -35,8 +35,9 @@ body {
 
 .model-background {
   position: absolute;
-  inset: 0;
+  inset: 0 auto 0 0;
   z-index: 0;
+  width: 65%;
   background: #000;
   opacity: 0;
 }
@@ -57,16 +58,18 @@ body {
 .welcome-text {
   position: absolute;
   top: 50%;
-  left: 50%;
+  right: 6%;
+  left: auto;
   width: max-content;
-  max-width: calc(100% - 32px);
+  max-width: 28%;
   margin: 0;
   color: #fff;
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   font-weight: 700;
+  text-align: right;
   opacity: 0;
-  transform: translate(-50%, calc(-50% + 25vh));
+  transform: translateY(-50%);
 }
 
 .copyright-text {
@@ -75,7 +78,7 @@ body {
   bottom: 14px;
   left: 16px;
   margin: 0;
-  color: #e60046;
+  color: #fff;
   font-family: 'Poppins', sans-serif;
   font-size: 12px;
   font-weight: 400;
@@ -99,7 +102,17 @@ body {
 }
 
 @media (max-width: 600px) {
+  .model-background {
+    width: 58%;
+  }
+
   .welcome-text {
-    font-size: 16px;
+    right: 5%;
+    max-width: 36%;
+    font-size: 14px;
+  }
+
+  .copyright-text {
+    font-size: 10px;
   }
 }
