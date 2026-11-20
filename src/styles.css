@@ -66,6 +66,7 @@ body {
 }
 
 .tech-icons {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -76,10 +77,25 @@ body {
   opacity: 0;
 }
 
+.tech-icons::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  left: 40.5px;
+  top: 40.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .tech-icon {
   display: block;
   width: 81px;
   height: 81px;
+  opacity: 1;
   filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 15px currentColor);
   transition: transform 180ms ease, filter 180ms ease;
 }
@@ -90,14 +106,17 @@ body {
 
 .node-icon {
   color: #83cd29;
+  --icon-start-x: -103px;
 }
 
 .mongo-icon {
   color: #47a248;
+  --icon-start-x: -206px;
 }
 
 .vps-icon {
   color: #8b9cff;
+  --icon-start-x: -309px;
 }
 
 .welcome-text {
@@ -132,6 +151,71 @@ body {
   animation: welcome-fade-in 1.4s ease forwards;
 }
 
+.welcome-screen.is-ready .tech-icons::before {
+  animation: star-bloom 1.25s ease-in-out both;
+}
+
+.welcome-screen.is-ready .tech-icon {
+  animation: icon-arrive 650ms cubic-bezier(0.18, 0.85, 0.25, 1) both;
+}
+
+.welcome-screen.is-ready .react-icon {
+  animation-delay: 1.05s;
+}
+
+.welcome-screen.is-ready .node-icon {
+  animation-delay: 1.8s;
+}
+
+.welcome-screen.is-ready .mongo-icon {
+  animation-delay: 2.12s;
+}
+
+.welcome-screen.is-ready .vps-icon {
+  animation-delay: 2.44s;
+}
+
+@keyframes star-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+    box-shadow: 0 0 0 0 #fff, 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(1.7);
+    box-shadow: 0 0 8px 4px #fff, 0 0 24px 12px rgba(255, 255, 255, 0.95), 0 0 55px 25px rgba(255, 255, 255, 0.55);
+  }
+  58% {
+    opacity: 1;
+    transform: scale(2.3);
+    box-shadow: 0 0 12px 6px #fff, 0 0 35px 18px rgba(255, 255, 255, 0.9), 0 0 75px 34px rgba(255, 255, 255, 0.45);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.1);
+    box-shadow: 0 0 18px 8px #fff, 0 0 45px 22px rgba(255, 255, 255, 0.8);
+  }
+}
+
+@keyframes icon-arrive {
+  0% {
+    opacity: 0;
+    transform: translate(var(--icon-start-x, 0px), 15px) scale(0.18);
+    filter: brightness(3) drop-shadow(0 0 24px currentColor);
+  }
+  65% {
+    opacity: 1;
+    transform: translate(0, -3px) scale(1.12);
+    filter: brightness(1.8) drop-shadow(0 0 22px currentColor) drop-shadow(0 0 35px currentColor);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 15px currentColor);
+  }
+}
+
 @keyframes welcome-fade-in {
   from {
     opacity: 0;
@@ -157,9 +241,26 @@ body {
     margin-bottom: 20px;
   }
 
+  .tech-icons::before {
+    left: 30px;
+    top: 30px;
+  }
+
   .tech-icon {
     width: 60px;
     height: 60px;
+  }
+
+  .node-icon {
+    --icon-start-x: -72px;
+  }
+
+  .mongo-icon {
+    --icon-start-x: -144px;
+  }
+
+  .vps-icon {
+    --icon-start-x: -216px;
   }
 
   .welcome-text {
