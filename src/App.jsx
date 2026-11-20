@@ -1,16 +1,14 @@
 import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useAnimations, useGLTF } from '@react-three/drei'
-import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
 
 const MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
 function HumanCharacter() {
   const group = useRef()
-  const { scene, animations } = useGLTF(MODEL_URL, true, true, (loader) => {
-    loader.setMeshoptDecoder(MeshoptDecoder)
-  })
+  // Let drei configure its built-in Draco and Meshopt decoders.
+  const { scene, animations } = useGLTF(MODEL_URL)
   const { actions } = useAnimations(animations, group)
 
   useEffect(() => {
@@ -24,8 +22,6 @@ function HumanCharacter() {
 
   useFrame(({ clock }) => {
     if (!group.current) return
-    // The character's Idle clip drives the natural body motion.
-    // This tiny offset adds a restrained breathing rhythm without shifting the framing.
     group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
   })
 
@@ -72,9 +68,7 @@ function ModelScene() {
   )
 }
 
-useGLTF.preload(MODEL_URL, true, true, (loader) => {
-  loader.setMeshoptDecoder(MeshoptDecoder)
-})
+useGLTF.preload(MODEL_URL)
 
 export default function App() {
   return (
