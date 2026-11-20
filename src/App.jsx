@@ -7,6 +7,15 @@ import * as THREE from 'three'
 const MODEL_URL =
   'https://cdn.jsdelivr.net/npm/open-anatomy-3d@0.1.0/models/anatomy-male.glb'
 
+const ANATOMY_SYSTEMS = new Set([
+  'skin',
+  'skeleton',
+  'muscles',
+  'organs',
+  'vessels',
+  'nerves',
+])
+
 function HumanHead() {
   const group = useRef()
   const { scene } = useGLTF(MODEL_URL, true, true, (loader) => {
@@ -15,6 +24,14 @@ function HumanHead() {
 
   const model = useMemo(() => {
     const clone = scene.clone(true)
+
+    // Keep the outer skin surface visible and hide the internal anatomy layers.
+    clone.traverse((object) => {
+      if (ANATOMY_SYSTEMS.has(object.name)) {
+        object.visible = object.name === 'skin'
+      }
+    })
+
     const bounds = new THREE.Box3().setFromObject(clone)
     const center = bounds.getCenter(new THREE.Vector3())
     clone.position.x -= center.x
