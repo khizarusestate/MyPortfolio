@@ -60,7 +60,7 @@ function ModelScene() {
   return (
     <Canvas
       className="human-canvas"
-      camera={{ position: [0, 1.62, 0.88], fov: 27, near: 0.01, far: 20 }}
+      camera={{ position: [0, 1.62, 0.78], fov: 27, near: 0.01, far: 20 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false }}
     >
