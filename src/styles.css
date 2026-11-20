@@ -22,6 +22,7 @@ body {
 }
 
 .welcome-screen {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -40,6 +41,18 @@ body {
   transform: translateY(25vh);
   animation: welcome-fade-in 1.4s ease forwards;
   animation-delay: 2s;
+}
+
+.copyright-text {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  left: 16px;
+  margin: 0;
+  color: #777;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
 }
 
 @keyframes welcome-fade-in {
