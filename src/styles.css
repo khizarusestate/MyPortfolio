@@ -24,9 +24,9 @@ body {
 .welcome-screen {
   min-height: 100vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding: 24px 24px 40px;
+  padding: 24px;
   background: #000;
   text-align: center;
 }
@@ -37,6 +37,7 @@ body {
   font-size: 20px;
   font-weight: 700;
   opacity: 0;
+  transform: translateY(7vh);
   animation: welcome-fade-in 1.4s ease forwards;
   animation-delay: 2s;
 }
