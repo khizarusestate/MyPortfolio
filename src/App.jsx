@@ -55,7 +55,7 @@ const CAMERA_VIEWS = [
   { position: [-1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 23 }, // ABOUT
   { position: [1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 17.5 }, // PROJECTS
   { position: [0, 1.43, -1.05], target: [0, 1.55, 0], fov: 20.5 }, // SKILLS: rear view
-  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 26.5 }, // EXPERIENCE: default angle, zoomed out
+  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 39 }, // EXPERIENCE: default angle, wide waist-up framing
   { position: [1.28, 1.52, 0.55], target: [0, 1.55, 0], fov: 24 }, // CONTACT
 ]
 
