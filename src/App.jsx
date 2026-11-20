@@ -51,11 +51,11 @@ function Character({ onLoaded }) {
 
 const CAMERA_VIEWS = [
   { position: [0, 1.43, 1.05], target: [0, 1.55, 0] },
-  { position: [-0.24, 1.44, 1.025], target: [0, 1.55, 0] },
-  { position: [0.25, 1.43, 1.02], target: [0, 1.54, 0] },
-  { position: [0.10, 1.57, 1.04], target: [0, 1.52, 0] },
-  { position: [-0.13, 1.37, 1.04], target: [0, 1.56, 0] },
-  { position: [0.29, 1.47, 1.00], target: [0, 1.55, 0] },
+  { position: [-0.58, 1.43, 0.88], target: [0, 1.55, 0] },
+  { position: [0.58, 1.43, 0.88], target: [0, 1.55, 0] },
+  { position: [0, 1.86, 0.94], target: [0, 1.48, 0] },
+  { position: [0, 1.08, 0.98], target: [0, 1.58, 0] },
+  { position: [0.76, 1.48, 0.72], target: [0, 1.55, 0] },
 ]
 
 function CameraRig({ view }) {
@@ -71,8 +71,8 @@ function CameraRig({ view }) {
   }, [view])
 
   useFrame(() => {
-    camera.position.lerp(targetPosition.current, 0.045)
-    currentLookAt.current.lerp(targetLookAt.current, 0.045)
+    camera.position.lerp(targetPosition.current, 0.055)
+    currentLookAt.current.lerp(targetLookAt.current, 0.055)
     camera.lookAt(currentLookAt.current)
   })
 
