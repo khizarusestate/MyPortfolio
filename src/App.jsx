@@ -1,65 +1,37 @@
-import { Suspense, useMemo, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useAnimations, useGLTF } from '@react-three/drei'
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
-import * as THREE from 'three'
 
 const MODEL_URL =
-  'https://cdn.jsdelivr.net/npm/open-anatomy-3d@0.1.0/models/anatomy-male.glb'
+  'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
-function HumanHead() {
+function HumanCharacter() {
   const group = useRef()
-  const { scene } = useGLTF(MODEL_URL, true, true, (loader) => {
+  const { scene, animations } = useGLTF(MODEL_URL, true, true, (loader) => {
     loader.setMeshoptDecoder(MeshoptDecoder)
   })
+  const { actions } = useAnimations(animations, group)
 
-  const model = useMemo(() => {
-    const clone = scene.clone(true)
-    const skinMaterial = new THREE.MeshStandardMaterial({
-      color: '#c99478',
-      roughness: 0.82,
-      metalness: 0,
-    })
+  useEffect(() => {
+    const idle = actions.Idle ?? Object.values(actions)[0]
+    idle?.reset().fadeIn(0.7).play()
 
-    // The GLB stores each body system in a direct child group.
-    // Show only the outer skin group; hide every internal anatomy layer.
-    clone.children.forEach((systemGroup) => {
-      systemGroup.visible = systemGroup.name.toLowerCase() === 'skin'
-    })
-
-    const skinGroup = clone.children.find(
-      (child) => child.name.toLowerCase() === 'skin',
-    )
-
-    if (skinGroup) {
-      skinGroup.visible = true
-      skinGroup.traverse((object) => {
-        if (object.isMesh) {
-          object.material = skinMaterial
-          object.material.side = THREE.DoubleSide
-        }
-      })
+    return () => {
+      idle?.fadeOut(0.3)
     }
-
-    const bounds = new THREE.Box3().setFromObject(clone)
-    const center = bounds.getCenter(new THREE.Vector3())
-    clone.position.x -= center.x
-    clone.position.z -= center.z
-    return clone
-  }, [scene])
+  }, [actions])
 
   useFrame(({ clock }) => {
     if (!group.current) return
-    const time = clock.elapsedTime
-    const breath = Math.sin(time * 1.05) * 0.009
-    group.current.position.y = -0.065 + breath
-    group.current.rotation.y = Math.sin(time * 0.2) * 0.012
-    group.current.rotation.x = Math.sin(time * 1.05) * 0.004
+    // The character's Idle clip drives the natural body motion.
+    // This tiny offset adds a restrained breathing rhythm without shifting the framing.
+    group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
   })
 
   return (
     <group ref={group}>
-      <primitive object={model} />
+      <primitive object={scene} />
     </group>
   )
 }
@@ -74,10 +46,10 @@ function CameraAim() {
 function SceneLighting() {
   return (
     <>
-      <ambientLight intensity={1.1} />
-      <directionalLight position={[-1.5, 2.8, 3]} intensity={2.1} />
-      <directionalLight position={[2.5, 1.2, -2]} intensity={1.4} />
-      <pointLight position={[0, 1.8, 2]} intensity={0.35} color="#ffb7a8" />
+      <ambientLight intensity={1.25} />
+      <directionalLight position={[-1.5, 2.8, 3]} intensity={2.0} />
+      <directionalLight position={[2.5, 1.2, -2]} intensity={1.25} />
+      <pointLight position={[0, 1.8, 2]} intensity={0.3} color="#ffe0d0" />
     </>
   )
 }
@@ -94,7 +66,7 @@ function ModelScene() {
       <SceneLighting />
       <CameraAim />
       <Suspense fallback={null}>
-        <HumanHead />
+        <HumanCharacter />
       </Suspense>
     </Canvas>
   )
