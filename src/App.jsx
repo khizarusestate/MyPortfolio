@@ -1,32 +1,21 @@
-import { Component, Suspense, useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, useAnimations, useGLTF } from '@react-three/drei'
+import { Suspense, useEffect, useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
-import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js'
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
-import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
-import { VignetteShader } from 'three/addons/shaders/VignetteShader.js'
 
 const MODEL_URL =
-  'https://grab3d.com/dl/man-base-character/man-base-character.glb'
-const FALLBACK_MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
-function HighDetailCharacter({ onLoaded }) {
+function Character({ onLoaded }) {
   const group = useRef()
-  const { gl } = useThree()
-  const { scene } = useGLTF(MODEL_URL)
+  const { scene, animations } = useGLTF(MODEL_URL)
+  const { actions } = useAnimations(animations, group)
 
   useEffect(() => {
-    const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
-
     scene.traverse((object) => {
       if (!object.isMesh) return
-      object.castShadow = true
-      object.receiveShadow = true
+      object.castShadow = false
+      object.receiveShadow = false
 
       const materials = Array.isArray(object.material)
         ? object.material
@@ -34,23 +23,22 @@ function HighDetailCharacter({ onLoaded }) {
 
       materials.forEach((material) => {
         if (!material) return
-        Object.values(material).forEach((value) => {
-          if (value?.isTexture) value.anisotropy = maxAnisotropy
-        })
-        if (material.isMeshStandardMaterial) {
-          material.envMapIntensity = 1.1
-        }
+        material.envMapIntensity = 0.7
         material.needsUpdate = true
       })
     })
 
+    const idle = actions.Idle ?? Object.values(actions)[0]
+    idle?.reset().fadeIn(0.5).play()
     onLoaded()
-  }, [gl, onLoaded, scene])
+
+    return () => idle?.fadeOut(0.2)
+  }, [actions, onLoaded, scene])
 
   useFrame(({ clock }) => {
     if (!group.current) return
-    group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
-    group.current.rotation.y = Math.sin(clock.elapsedTime * 0.22) * 0.008
+    group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 0.9) * 0.002
+    group.current.rotation.y = Math.sin(clock.elapsedTime * 0.2) * 0.006
   })
 
   return (
@@ -60,105 +48,15 @@ function HighDetailCharacter({ onLoaded }) {
   )
 }
 
-function OriginalCharacter({ onLoaded }) {
-  const group = useRef()
-  const { gl } = useThree()
-  const { scene, animations } = useGLTF(FALLBACK_MODEL_URL)
-  const { actions } = useAnimations(animations, group)
-
-  useEffect(() => {
-    const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
-    scene.traverse((object) => {
-      if (!object.isMesh) return
-      object.castShadow = true
-      object.receiveShadow = true
-      const materials = Array.isArray(object.material) ? object.material : [object.material]
-      materials.forEach((material) => {
-        if (!material) return
-        Object.values(material).forEach((value) => {
-          if (value?.isTexture) value.anisotropy = maxAnisotropy
-        })
-      })
-    })
-    const idle = actions.Idle ?? Object.values(actions)[0]
-    idle?.reset().fadeIn(0.7).play()
-    onLoaded()
-    return () => idle?.fadeOut(0.3)
-  }, [actions, gl, onLoaded, scene])
-
-  useFrame(({ clock }) => {
-    if (group.current) {
-      group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
-    }
-  })
-
-  return <group ref={group}><primitive object={scene} /></group>
-}
-
-class CharacterFallback extends Component {
-  state = { failed: false }
-
-  static getDerivedStateFromError() {
-    return { failed: true }
-  }
-
-  render() {
-    if (this.state.failed) return <OriginalCharacter onLoaded={this.props.onLoaded} />
-    return this.props.children
-  }
-}
-
-function CameraAim() {
-  useFrame(({ camera }) => {
-    camera.lookAt(0, 1.55, 0)
-  })
-  return null
-}
-
-function SceneLighting() {
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.7} />
-      <directionalLight
-        position={[-2.5, 4, 4]}
-        intensity={2.35}
-        color="#fff0e5"
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-camera-near={0.1}
-        shadow-camera-far={12}
-        shadow-camera-left={-3}
-        shadow-camera-right={3}
-        shadow-camera-top={4}
-        shadow-camera-bottom={-3}
-        shadow-bias={-0.00015}
-        shadow-normalBias={0.025}
-      />
-      <directionalLight position={[3, 1.5, 2]} intensity={0.95} color="#8eafff" />
-      <spotLight
-        position={[0.5, 3.5, -2.5]}
-        angle={0.75}
-        penumbra={0.85}
-        intensity={2.7}
-        color="#789dff"
-      />
-      <pointLight position={[-2, 1.7, 2]} intensity={0.45} color="#ffc59f" />
-      <pointLight position={[1.8, 2.2, -1.5]} intensity={0.6} color="#638dff" />
-    </>
-  )
-}
-
 function ModelScene({ onLoaded }) {
   return (
     <Canvas
       className="human-canvas"
       camera={{ position: [0, 1.43, 1.05], fov: 20.5, near: 0.01, far: 20 }}
-      dpr={2}
-      shadows="soft"
+      dpr={[1, 1.35]}
+      shadows={false}
       gl={{
-        antialias: true,
+        antialias: false,
         alpha: false,
         powerPreference: 'high-performance',
         toneMapping: THREE.ACESFilmicToneMapping,
@@ -166,59 +64,57 @@ function ModelScene({ onLoaded }) {
       }}
     >
       <color attach="background" args={['#000000']} />
-      <SceneLighting />
-      <Environment preset="studio" environmentIntensity={0.65} />
-      <CameraAim />
-      <CharacterFallback onLoaded={onLoaded}>
-        <Suspense fallback={null}>
-          <HighDetailCharacter onLoaded={onLoaded} />
-        </Suspense>
-      </CharacterFallback>
-      <CinematicPostProcessing />
+      <ambientLight intensity={0.75} />
+      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
+      <directionalLight position={[-2.5, 4, 4]} intensity={1.8} color="#fff0e5" />
+      <directionalLight position={[3, 1.5, 2]} intensity={0.65} color="#8eafff" />
+      <Suspense fallback={null}>
+        <Character onLoaded={onLoaded} />
+      </Suspense>
     </Canvas>
   )
 }
 
 useGLTF.preload(MODEL_URL)
-useGLTF.preload(FALLBACK_MODEL_URL)
 
 export default function App() {
-  const [modelLoaded, setModelLoaded] = useState(false)
-  const handleModelLoaded = () => setModelLoaded(true)
+  const handleModelLoaded = () => {
+    document.querySelector('.welcome-screen')?.classList.add('is-ready')
+  }
 
   return (
-    <main className={`welcome-screen${modelLoaded ? ' is-ready' : ''}`}>
+    <main className="welcome-screen">
       <div className="model-background" aria-hidden="true">
         <ModelScene onLoaded={handleModelLoaded} />
       </div>
       <div className="welcome-overlay">
         <div className="welcome-copy">
           <div className="tech-icons" aria-label="React, Node.js, MongoDB and VPS hosting">
-          <svg className="tech-icon react-icon" viewBox="0 0 48 48" role="img" aria-label="React">
-            <circle cx="24" cy="24" r="3.2" fill="currentColor" />
-            <g fill="none" stroke="currentColor" strokeWidth="1.8">
-              <ellipse cx="24" cy="24" rx="20" ry="7.8" />
-              <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(60 24 24)" />
-              <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(120 24 24)" />
-            </g>
-          </svg>
-          <svg className="tech-icon node-icon" viewBox="0 0 48 48" role="img" aria-label="Node.js">
-            <path d="M24 3.8 42 14.2v19.6L24 44.2 6 33.8V14.2L24 3.8Z" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
-            <text x="24" y="27" textAnchor="middle" fontSize="10" fontWeight="700" fill="currentColor">node</text>
-            <text x="24" y="35" textAnchor="middle" fontSize="6.5" fontWeight="700" fill="currentColor">JS</text>
-          </svg>
-          <svg className="tech-icon mongo-icon" viewBox="0 0 48 48" role="img" aria-label="MongoDB">
-            <path d="M24 4.5c-1.8 6.3-10.4 11.2-10.4 22.1 0 7.7 4.2 12.7 9 14.4l1.4 3.1 1.4-3.1c4.8-1.7 9-6.7 9-14.4C34.4 15.7 25.8 10.8 24 4.5Z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
-            <path d="M24 13v28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
-          <svg className="tech-icon vps-icon" viewBox="0 0 48 48" role="img" aria-label="VPS hosting">
-            <rect x="7" y="5" width="34" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
-            <rect x="7" y="22" width="34" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
-            <circle cx="13" cy="11.5" r="1.5" fill="currentColor" />
-            <circle cx="13" cy="28.5" r="1.5" fill="currentColor" />
-            <path d="M19 11.5h16M19 28.5h16M18 42h12M24 35v7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-          </svg>
-        </div>
+            <svg className="tech-icon react-icon" viewBox="0 0 48 48" role="img" aria-label="React">
+              <circle cx="24" cy="24" r="3.2" fill="currentColor" />
+              <g fill="none" stroke="currentColor" strokeWidth="1.8">
+                <ellipse cx="24" cy="24" rx="20" ry="7.8" />
+                <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(60 24 24)" />
+                <ellipse cx="24" cy="24" rx="20" ry="7.8" transform="rotate(120 24 24)" />
+              </g>
+            </svg>
+            <svg className="tech-icon node-icon" viewBox="0 0 48 48" role="img" aria-label="Node.js">
+              <path d="M24 3.8 42 14.2v19.6L24 44.2 6 33.8V14.2L24 3.8Z" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
+              <text x="24" y="27" textAnchor="middle" fontSize="10" fontWeight="700" fill="currentColor">node</text>
+              <text x="24" y="35" textAnchor="middle" fontSize="6.5" fontWeight="700" fill="currentColor">JS</text>
+            </svg>
+            <svg className="tech-icon mongo-icon" viewBox="0 0 48 48" role="img" aria-label="MongoDB">
+              <path d="M24 4.5c-1.8 6.3-10.4 11.2-10.4 22.1 0 7.7 4.2 12.7 9 14.4l1.4 3.1 1.4-3.1c4.8-1.7 9-6.7 9-14.4C34.4 15.7 25.8 10.8 24 4.5Z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+              <path d="M24 13v28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+            <svg className="tech-icon vps-icon" viewBox="0 0 48 48" role="img" aria-label="VPS hosting">
+              <rect x="7" y="5" width="34" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
+              <rect x="7" y="22" width="34" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
+              <circle cx="13" cy="11.5" r="1.5" fill="currentColor" />
+              <circle cx="13" cy="28.5" r="1.5" fill="currentColor" />
+              <path d="M19 11.5h16M19 28.5h16M18 42h12M24 35v7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+          </div>
           <h1 className="welcome-text">Press Enter to Continue</h1>
         </div>
         <p className="copyright-text">© 2026 | All Rights Reserved.</p>
