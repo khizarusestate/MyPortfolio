@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -48,7 +48,7 @@ function Character({ onLoaded }) {
   )
 }
 
-function ModelScene({ onLoaded, zoomOut }) {
+function ModelScene({ onLoaded }) {
   return (
     <Canvas
       className="human-canvas"
@@ -69,7 +69,6 @@ function ModelScene({ onLoaded, zoomOut }) {
       <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
       <directionalLight position={[-2.5, 4, 4]} intensity={1.8} color="#fff0e5" />
       <directionalLight position={[3, 1.5, 2]} intensity={0.65} color="#8eafff" />
-      <CameraPullback active={zoomOut} />
       <Suspense fallback={null}>
         <Character onLoaded={onLoaded} />
       </Suspense>
@@ -77,15 +76,6 @@ function ModelScene({ onLoaded, zoomOut }) {
   )
 }
 
-function CameraPullback({ active }) {
-  const targetPosition = useRef(new THREE.Vector3(0, 1.43, 2.35))
-  useFrame(({ camera }, delta) => {
-    if (!active) return
-    camera.position.lerp(targetPosition.current, 1 - Math.exp(-1.15 * delta))
-    camera.lookAt(0, 1.55, 0)
-  })
-  return null
-}
 
 useGLTF.preload(MODEL_URL)
 
@@ -101,7 +91,6 @@ function TechIcon({ name, className, children }) {
 }
 
 export default function App() {
-  const [zoomOut, setZoomOut] = useState(false)
   const handleModelLoaded = () => {
     document.querySelector('.welcome-screen')?.classList.add('is-ready')
   }
@@ -112,7 +101,6 @@ export default function App() {
       const screen = document.querySelector('.welcome-screen')
       if (!screen?.classList.contains('is-ready') || screen.classList.contains('is-exiting')) return
       screen.classList.add('is-exiting')
-      window.setTimeout(() => setZoomOut(true), 700)
     }
 
     window.addEventListener('keydown', handleEnter)
@@ -122,7 +110,7 @@ export default function App() {
   return (
     <main className="welcome-screen">
       <div className="model-background" aria-hidden="true">
-        <ModelScene onLoaded={handleModelLoaded} zoomOut={zoomOut} />
+        <ModelScene onLoaded={handleModelLoaded} />
       </div>
       <div className="welcome-overlay">
         <div className="welcome-copy">
