@@ -21,10 +21,17 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 .welcome-screen.is-ready .model-background,.welcome-screen.is-ready .welcome-text,.welcome-screen.is-ready .copyright-text{animation:welcome-fade-in 1.4s ease forwards}
 .welcome-screen.is-ready .tech-icons{animation:welcome-fade-in 500ms ease forwards}
 .welcome-screen.is-ready .icon-star{animation:spark-travel 850ms cubic-bezier(.2,.8,.25,1) var(--spark-delay) both,spark-fade 350ms ease 5.05s both}
+.welcome-screen.is-ready .react-item .icon-star{animation:react-spark-travel 850ms cubic-bezier(.2,.8,.25,1) 0s both,spark-fade 350ms ease 5.05s both}
 .welcome-screen.is-ready .tech-icon{animation:icon-materialize 600ms cubic-bezier(.2,.8,.25,1) 5.25s both}
 @keyframes spark-travel{
 0%{opacity:0;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(.15);background:#fff;box-shadow:0 0 0 0 #fff}
 18%{opacity:1;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(1.7);background:#fff;box-shadow:0 0 10px 5px #fff,0 0 30px 15px currentColor,0 0 65px 30px currentColor}
+78%{opacity:1;transform:translate(-50%,-50%) scale(1.25);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
+100%{opacity:1;transform:translate(-50%,-50%) scale(1);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
+}
+@keyframes react-spark-travel{
+0%{opacity:0;transform:translate(-50%,-50%) scale(.15);background:currentColor;box-shadow:0 0 0 0 currentColor}
+18%{opacity:1;transform:translate(-50%,-50%) scale(1.7);background:currentColor;box-shadow:0 0 10px 5px currentColor,0 0 30px 15px currentColor,0 0 65px 30px currentColor}
 78%{opacity:1;transform:translate(-50%,-50%) scale(1.25);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 100%{opacity:1;transform:translate(-50%,-50%) scale(1);background:currentColor;box-shadow:0 0 12px 6px currentColor,0 0 30px 15px currentColor,0 0 55px 25px currentColor}
 }
