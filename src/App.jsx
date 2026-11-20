@@ -2,9 +2,65 @@ import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment, useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { VignetteShader } from 'three/addons/shaders/VignetteShader.js'
 
 const MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
+
+function CinematicPostProcessing() {
+  const composer = useRef()
+  const { gl, scene, camera, size } = useThree()
+
+  useEffect(() => {
+    const pipeline = new EffectComposer(gl)
+    pipeline.addPass(new RenderPass(scene, camera))
+
+    const ambientOcclusion = new SSAOPass(scene, camera, size.width, size.height)
+    ambientOcclusion.kernelRadius = 12
+    ambientOcclusion.minDistance = 0.001
+    ambientOcclusion.maxDistance = 0.12
+    pipeline.addPass(ambientOcclusion)
+
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(size.width, size.height),
+      0.16,
+      0.38,
+      0.92,
+    )
+    pipeline.addPass(bloom)
+
+    const vignette = new ShaderPass(VignetteShader)
+    vignette.uniforms.offset.value = 0.28
+    vignette.uniforms.darkness.value = 0.72
+    pipeline.addPass(vignette)
+    pipeline.addPass(new OutputPass())
+
+    pipeline.setPixelRatio(gl.getPixelRatio())
+    pipeline.setSize(size.width, size.height)
+    composer.current = pipeline
+
+    return () => {
+      pipeline.dispose()
+      composer.current = undefined
+    }
+  }, [gl, scene, camera])
+
+  useEffect(() => {
+    composer.current?.setSize(size.width, size.height)
+  }, [size.width, size.height])
+
+  useFrame(() => {
+    composer.current?.render()
+  }, 1)
+
+  return null
+}
 
 function HumanCharacter({ onLoaded }) {
   const group = useRef()
@@ -26,7 +82,7 @@ function HumanCharacter({ onLoaded }) {
 
       materials.forEach((material) => {
         if (!material) return
-        Object.entries(material).forEach(([key, value]) => {
+        Object.values(material).forEach((value) => {
           if (value?.isTexture) value.anisotropy = maxAnisotropy
         })
         material.needsUpdate = true
@@ -64,12 +120,12 @@ function CameraAim() {
 function SceneLighting() {
   return (
     <>
-      <ambientLight intensity={0.35} />
-      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
+      <ambientLight intensity={0.3} />
+      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.7} />
       <directionalLight
         position={[-2.5, 4, 4]}
-        intensity={2.2}
-        color="#fff1e6"
+        intensity={2.35}
+        color="#fff0e5"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -82,15 +138,16 @@ function SceneLighting() {
         shadow-bias={-0.00015}
         shadow-normalBias={0.025}
       />
-      <directionalLight position={[3, 1.5, 2]} intensity={0.8} color="#9bbcff" />
+      <directionalLight position={[3, 1.5, 2]} intensity={0.95} color="#8eafff" />
       <spotLight
         position={[0.5, 3.5, -2.5]}
         angle={0.75}
-        penumbra={0.8}
-        intensity={2.4}
-        color="#8caeff"
+        penumbra={0.85}
+        intensity={2.7}
+        color="#789dff"
       />
-      <pointLight position={[-2, 1.7, 2]} intensity={0.35} color="#ffc59f" />
+      <pointLight position={[-2, 1.7, 2]} intensity={0.45} color="#ffc59f" />
+      <pointLight position={[1.8, 2.2, -1.5]} intensity={0.6} color="#638dff" />
     </>
   )
 }
@@ -112,11 +169,12 @@ function ModelScene({ onLoaded }) {
     >
       <color attach="background" args={['#000000']} />
       <SceneLighting />
-      <Environment preset="studio" environmentIntensity={0.55} />
+      <Environment preset="studio" environmentIntensity={0.65} />
       <CameraAim />
       <Suspense fallback={null}>
         <HumanCharacter onLoaded={onLoaded} />
       </Suspense>
+      <CinematicPostProcessing />
     </Canvas>
   )
 }
