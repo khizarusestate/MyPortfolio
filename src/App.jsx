@@ -260,10 +260,8 @@ export default function App() {
       <section className={`portfolio-menu ${menuVisible ? 'is-visible' : ''}`} aria-label="Portfolio main menu" aria-hidden={!menuVisible}>
         <header className="menu-header">
           <div className="menu-heading">
-            <span className="menu-kicker">KH / PORTFOLIO</span>
             <h2>Main Menu</h2>
           </div>
-          <div className="menu-player"><span className="player-dot" /> AVAILABLE FOR OPPORTUNITIES</div>
         </header>
 
         <nav className="menu-tabs" aria-label="Main navigation">
