@@ -50,12 +50,13 @@ function Character({ onLoaded }) {
 
 
 const CAMERA_VIEWS = [
-  { position: [0, 1.43, 1.05], target: [0, 1.55, 0] },
-  { position: [-0.92, 1.43, 0.62], target: [0, 1.55, 0] },
-  { position: [0.92, 1.43, 0.62], target: [0, 1.55, 0] },
-  { position: [0, 2.12, 0.72], target: [0, 1.48, 0] },
-  { position: [0, 0.88, 0.78], target: [0, 1.58, 0] },
-  { position: [1.18, 1.52, 0.28], target: [0, 1.55, 0] },
+  // Each menu category gets its own camera angle and focal length.
+  { position: [0, 1.43, 1.05], target: [0, 1.55, 0], fov: 20.5 },
+  { position: [-1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 23 },
+  { position: [1.12, 1.43, 0.82], target: [0, 1.55, 0], fov: 17.5 },
+  { position: [0, 2.02, 0.9], target: [0, 1.48, 0], fov: 21.5 },
+  { position: [0, 0.94, 0.9], target: [0, 1.58, 0], fov: 18.5 },
+  { position: [1.28, 1.52, 0.55], target: [0, 1.55, 0], fov: 24 },
 ]
 
 function CameraRig({ view }) {
@@ -63,19 +64,31 @@ function CameraRig({ view }) {
   const targetPosition = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].position))
   const targetLookAt = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].target))
   const currentLookAt = useRef(new THREE.Vector3(...CAMERA_VIEWS[0].target))
+  const targetFov = useRef(CAMERA_VIEWS[0].fov)
+  const activeView = useRef(view)
 
-  useEffect(() => {
-    const preset = CAMERA_VIEWS[view] ?? CAMERA_VIEWS[0]
-    targetPosition.current.set(...preset.position)
-    targetLookAt.current.set(...preset.target)
-  }, [view])
+  // Read the latest category directly in the render loop so camera changes
+  // cannot be missed while the menu is switching between tabs.
+  activeView.current = view
 
   useFrame((_, delta) => {
-    const smooth = 1 - Math.exp(-3.2 * delta)
+    if (activeView.current !== activeView.previous) {
+      const preset = CAMERA_VIEWS[activeView.current] ?? CAMERA_VIEWS[0]
+      targetPosition.current.set(...preset.position)
+      targetLookAt.current.set(...preset.target)
+      targetFov.current = preset.fov
+      activeView.previous = activeView.current
+    }
+
+    const smooth = 1 - Math.exp(-2.8 * delta)
     camera.position.lerp(targetPosition.current, smooth)
     currentLookAt.current.lerp(targetLookAt.current, smooth)
     camera.lookAt(currentLookAt.current)
-    camera.updateProjectionMatrix()
+
+    if (camera.isPerspectiveCamera) {
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov.current, smooth)
+      camera.updateProjectionMatrix()
+    }
   })
 
   return null
