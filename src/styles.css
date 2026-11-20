@@ -65,14 +65,31 @@ body {
   text-align: right;
 }
 
-.welcome-heading {
-  margin: 0 0 12px;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.tech-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+  margin-bottom: 16px;
   opacity: 0;
+}
+
+.tech-icon {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
+
+.react-icon {
+  color: #61dafb;
+}
+
+.node-icon {
+  color: #83cd29;
+}
+
+.mongo-icon {
+  color: #47a248;
 }
 
 .welcome-text {
@@ -100,7 +117,7 @@ body {
 }
 
 .welcome-screen.is-ready .model-background,
-.welcome-screen.is-ready .welcome-heading,
+.welcome-screen.is-ready .tech-icons,
 .welcome-screen.is-ready .welcome-text,
 .welcome-screen.is-ready .copyright-text {
   animation: welcome-fade-in 1.4s ease forwards;
@@ -125,8 +142,14 @@ body {
     max-width: 36%;
   }
 
-  .welcome-heading {
-    font-size: 16px;
+  .tech-icons {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .tech-icon {
+    width: 30px;
+    height: 30px;
   }
 
   .welcome-text {
