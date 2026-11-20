@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -79,6 +79,33 @@ function ModelScene({ onLoaded }) {
 
 useGLTF.preload(MODEL_URL)
 
+const MENU_CATEGORIES = [
+  { label: 'OVERVIEW', items: [
+    { title: 'Introduction', description: 'A little about the developer behind the work.', detail: 'KHIZAR HAYAT  /  SOFTWARE ENGINEER' },
+    { title: 'Technical Arsenal', description: 'The tools and technologies used to build digital products.', detail: 'MERN STACK  ·  REST APIs  ·  REAL-TIME SYSTEMS' },
+  ]},
+  { label: 'ABOUT', items: [
+    { title: 'Who I Am', description: 'A software developer focused on building useful, thoughtful digital experiences.', detail: 'PROFILE  /  ABOUT ME' },
+    { title: 'My Approach', description: 'Clean architecture, practical problem-solving and attention to detail.', detail: 'MINDSET  /  ENGINEERING' },
+  ]},
+  { label: 'PROJECTS', items: [
+    { title: 'Featured Work', description: 'A selection of products and applications built from concept to deployment.', detail: 'PORTFOLIO  /  SELECTED PROJECTS' },
+    { title: 'All Projects', description: 'Explore experiments, client work and full-stack applications.', detail: 'PORTFOLIO  /  PROJECT ARCHIVE' },
+  ]},
+  { label: 'SKILLS', items: [
+    { title: 'Development', description: 'Frontend and backend engineering with modern JavaScript technologies.', detail: 'REACT  ·  NODE.JS  ·  EXPRESS  ·  MONGODB' },
+    { title: 'Infrastructure', description: 'Deployment, server management and real-time application infrastructure.', detail: 'LINUX  ·  NGINX  ·  VPS  ·  REDIS' },
+  ]},
+  { label: 'EXPERIENCE', items: [
+    { title: 'Professional Journey', description: 'Practical experience across independent projects, freelance work and collaboration.', detail: 'EXPERIENCE  /  JOURNEY' },
+    { title: 'What I Do', description: 'Turning ideas into reliable, production-ready web applications.', detail: 'FULL-STACK  /  ENGINEERING' },
+  ]},
+  { label: 'CONTACT', items: [
+    { title: 'Let’s Connect', description: 'Have an idea or opportunity? Let’s build something meaningful.', detail: 'CONTACT  /  COLLABORATION' },
+    { title: 'Resume', description: 'View professional background, skills and selected experience.', detail: 'PROFILE  /  RESUME' },
+  ]},
+]
+
 function TechIcon({ name, className, children }) {
   return (
     <div className={`tech-item ${className}`}>
@@ -91,22 +118,57 @@ function TechIcon({ name, className, children }) {
 }
 
 export default function App() {
+  const [menuVisible, setMenuVisible] = useState(false)
+  const [activeCategory, setActiveCategory] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [confirmed, setConfirmed] = useState(false)
+
   const handleModelLoaded = () => {
     document.querySelector('.welcome-screen')?.classList.add('is-ready')
   }
 
   useEffect(() => {
-    const handleEnter = (event) => {
-      if (event.key !== 'Enter') return
+    let menuTimer
+    const handleKeyDown = (event) => {
       const screen = document.querySelector('.welcome-screen')
-      if (!screen?.classList.contains('is-ready') || screen.classList.contains('is-exiting')) return
-      screen.classList.add('is-exiting')
-      window.setTimeout(() => screen.classList.add('is-model-centering'), 700)
+      if (!menuVisible) {
+        if (event.key !== 'Enter') return
+        if (!screen?.classList.contains('is-ready') || screen.classList.contains('is-exiting')) return
+        screen.classList.add('is-exiting')
+        window.setTimeout(() => screen.classList.add('is-model-centering'), 700)
+        menuTimer = window.setTimeout(() => setMenuVisible(true), 1550)
+        return
+      }
+
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(event.key)) {
+        event.preventDefault()
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        const direction = event.key === 'ArrowRight' ? 1 : -1
+        setActiveCategory((current) => (current + direction + MENU_CATEGORIES.length) % MENU_CATEGORIES.length)
+        setSelectedIndex(0)
+        setConfirmed(false)
+      } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        const direction = event.key === 'ArrowDown' ? 1 : -1
+        setSelectedIndex((current) => {
+          const count = MENU_CATEGORIES[activeCategory].items.length
+          return (current + direction + count) % count
+        })
+        setConfirmed(false)
+      } else if (event.key === 'Enter') {
+        setConfirmed(true)
+      }
     }
 
-    window.addEventListener('keydown', handleEnter)
-    return () => window.removeEventListener('keydown', handleEnter)
-  }, [])
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.clearTimeout(menuTimer)
+    }
+  }, [menuVisible, activeCategory])
+
+  const currentItems = MENU_CATEGORIES[activeCategory].items
+  const selectedItem = currentItems[selectedIndex]
 
   return (
     <main className="welcome-screen">
@@ -148,6 +210,71 @@ export default function App() {
         </div>
         <p className="copyright-text">© 2026 | All Rights Reserved.</p>
       </div>
+
+      <section className={`portfolio-menu ${menuVisible ? 'is-visible' : ''}`} aria-label="Portfolio main menu" aria-hidden={!menuVisible}>
+        <header className="menu-header">
+          <div className="menu-heading">
+            <span className="menu-kicker">KH / PORTFOLIO</span>
+            <h2>Main Menu</h2>
+          </div>
+          <div className="menu-player"><span className="player-dot" /> AVAILABLE FOR OPPORTUNITIES</div>
+        </header>
+
+        <nav className="menu-tabs" aria-label="Main navigation">
+          <span className="menu-shoulder">◀</span>
+          {MENU_CATEGORIES.map((category, index) => (
+            <button
+              key={category.label}
+              className={index === activeCategory ? 'menu-tab is-active' : 'menu-tab'}
+              onMouseEnter={() => { setActiveCategory(index); setSelectedIndex(0); setConfirmed(false) }}
+              onClick={() => { setActiveCategory(index); setSelectedIndex(0); setConfirmed(false) }}
+              tabIndex={menuVisible ? 0 : -1}
+            >
+              {category.label}
+            </button>
+          ))}
+          <span className="menu-shoulder">▶</span>
+        </nav>
+
+        <div className="menu-main">
+          <div className="menu-options" role="listbox" aria-label={MENU_CATEGORIES[activeCategory].label}>
+            {currentItems.map((item, index) => (
+              <button
+                key={item.title}
+                role="option"
+                aria-selected={index === selectedIndex}
+                className={index === selectedIndex ? 'menu-option is-selected' : 'menu-option'}
+                onMouseEnter={() => { setSelectedIndex(index); setConfirmed(false) }}
+                onClick={() => { setSelectedIndex(index); setConfirmed(true) }}
+                tabIndex={menuVisible ? 0 : -1}
+              >
+                <span className="option-index">0{index + 1}</span>
+                <span>{item.title}</span>
+                <span className="option-arrow">›</span>
+              </button>
+            ))}
+          </div>
+
+          <aside className={`menu-feature ${confirmed ? 'is-confirmed' : ''}`}>
+            <span className="feature-overline">SELECTED / {String(selectedIndex + 1).padStart(2, '0')}</span>
+            <div className="feature-rule" />
+            <h3>{selectedItem.title}</h3>
+            <p>{selectedItem.description}</p>
+            <span className="feature-detail">{selectedItem.detail}</span>
+            <div className="feature-bottom"><span>KHIZAR HAYAT</span><span>2026</span></div>
+          </aside>
+        </div>
+
+        <footer className="menu-footer">
+          <p>{selectedItem.description}</p>
+          <div className="menu-controls">
+            <span><kbd>↑</kbd><kbd>↓</kbd> SELECT</span>
+            <span><kbd>←</kbd><kbd>→</kbd> CATEGORY</span>
+            <span><kbd>ENTER</kbd> CONFIRM</span>
+            <span className="menu-hint">MOUSE SUPPORTED</span>
+          </div>
+        </footer>
+      </section>
     </main>
   )
 }
