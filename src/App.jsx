@@ -1,17 +1,38 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useAnimations, useGLTF } from '@react-three/drei'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Environment, useAnimations, useGLTF } from '@react-three/drei'
+import * as THREE from 'three'
 
 const MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
 function HumanCharacter({ onLoaded }) {
   const group = useRef()
-  // The component mounts only after the GLB and its required assets are ready.
+  const { gl } = useThree()
   const { scene, animations } = useGLTF(MODEL_URL)
   const { actions } = useAnimations(animations, group)
 
   useEffect(() => {
+    const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
+
+    scene.traverse((object) => {
+      if (!object.isMesh) return
+      object.castShadow = true
+      object.receiveShadow = true
+
+      const materials = Array.isArray(object.material)
+        ? object.material
+        : [object.material]
+
+      materials.forEach((material) => {
+        if (!material) return
+        Object.entries(material).forEach(([key, value]) => {
+          if (value?.isTexture) value.anisotropy = maxAnisotropy
+        })
+        material.needsUpdate = true
+      })
+    })
+
     const idle = actions.Idle ?? Object.values(actions)[0]
     idle?.reset().fadeIn(0.7).play()
     onLoaded()
@@ -19,7 +40,7 @@ function HumanCharacter({ onLoaded }) {
     return () => {
       idle?.fadeOut(0.3)
     }
-  }, [actions, onLoaded])
+  }, [actions, gl, onLoaded, scene])
 
   useFrame(({ clock }) => {
     if (!group.current) return
@@ -43,10 +64,33 @@ function CameraAim() {
 function SceneLighting() {
   return (
     <>
-      <ambientLight intensity={1.25} />
-      <directionalLight position={[-1.5, 2.8, 3]} intensity={2.0} />
-      <directionalLight position={[2.5, 1.2, -2]} intensity={1.25} />
-      <pointLight position={[0, 1.8, 2]} intensity={0.3} color="#ffe0d0" />
+      <ambientLight intensity={0.35} />
+      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
+      <directionalLight
+        position={[-2.5, 4, 4]}
+        intensity={2.2}
+        color="#fff1e6"
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-near={0.1}
+        shadow-camera-far={12}
+        shadow-camera-left={-3}
+        shadow-camera-right={3}
+        shadow-camera-top={4}
+        shadow-camera-bottom={-3}
+        shadow-bias={-0.00015}
+        shadow-normalBias={0.025}
+      />
+      <directionalLight position={[3, 1.5, 2]} intensity={0.8} color="#9bbcff" />
+      <spotLight
+        position={[0.5, 3.5, -2.5]}
+        angle={0.75}
+        penumbra={0.8}
+        intensity={2.4}
+        color="#8caeff"
+      />
+      <pointLight position={[-2, 1.7, 2]} intensity={0.35} color="#ffc59f" />
     </>
   )
 }
@@ -57,10 +101,18 @@ function ModelScene({ onLoaded }) {
       className="human-canvas"
       camera={{ position: [0, 1.43, 1.05], fov: 20.5, near: 0.01, far: 20 }}
       dpr={2}
-      gl={{ antialias: true, alpha: false }}
+      shadows="soft"
+      gl={{
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance',
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.05,
+      }}
     >
       <color attach="background" args={['#000000']} />
       <SceneLighting />
+      <Environment preset="studio" environmentIntensity={0.55} />
       <CameraAim />
       <Suspense fallback={null}>
         <HumanCharacter onLoaded={onLoaded} />
