@@ -78,8 +78,8 @@ body {
 
 .tech-icon {
   display: block;
-  width: 108px;
-  height: 108px;
+  width: 81px;
+  height: 81px;
   filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 15px currentColor);
   transition: transform 180ms ease, filter 180ms ease;
 }
@@ -154,8 +154,8 @@ body {
   }
 
   .tech-icon {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 
   .welcome-text {
