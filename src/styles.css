@@ -2,10 +2,8 @@
 html,body,#root{width:100%;min-height:100%;margin:0}
 html,body,#root{min-height:100vh;background:#000}
 body{min-width:320px;font-family:'Poppins',sans-serif}
-.welcome-screen{position:relative;width:100%;min-height:100vh;min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 78% 38%,rgba(34,57,112,.16) 0%,rgba(15,25,52,.08) 27%,transparent 58%),radial-gradient(ellipse at 88% 88%,rgba(21,39,83,.12) 0%,transparent 42%),#000;text-align:center;font-family:'Poppins',sans-serif}
-.welcome-screen::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,transparent 35%,rgba(0,0,0,.48) 100%),linear-gradient(115deg,transparent 45%,rgba(75,105,190,.025) 70%,transparent 100%)}
+.welcome-screen{position:relative;width:100%;min-height:100vh;min-height:100svh;overflow:hidden;background:#000;text-align:center;font-family:'Poppins',sans-serif}
 .model-background{position:absolute;inset:0 auto 0 0;z-index:0;width:65%;background:#000;opacity:0}
-.model-background::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 76% 34%,rgba(77,112,220,.17),transparent 48%),radial-gradient(ellipse at 18% 52%,rgba(45,75,145,.09),transparent 54%),linear-gradient(90deg,rgba(0,0,0,.04),transparent 30%,rgba(40,65,130,.07));mix-blend-mode:screen}
 .human-canvas{display:block;width:100%!important;height:100%!important}
 .welcome-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
 .welcome-copy{position:absolute;top:50%;right:6%;width:max-content;max-width:28%;transform:translateY(-50%);text-align:right}
@@ -47,8 +45,6 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 @keyframes welcome-fade-in{from{opacity:0}to{opacity:1}}
 @media(max-width:600px){
 .model-background{width:58%}
-.welcome-screen{background:radial-gradient(ellipse at 78% 38%,rgba(34,57,112,.12),transparent 58%),#000}
-.model-background::after{background:radial-gradient(ellipse at 76% 34%,rgba(77,112,220,.13),transparent 48%),linear-gradient(90deg,transparent,rgba(40,65,130,.04))}
 .welcome-copy{right:5%;max-width:36%}
 .tech-icons{gap:12px;margin-right:8px;margin-bottom:20px}
 .tech-item{flex-basis:60px;width:60px;height:60px}
