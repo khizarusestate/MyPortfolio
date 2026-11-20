@@ -94,6 +94,18 @@ export default function App() {
     document.querySelector('.welcome-screen')?.classList.add('is-ready')
   }
 
+  useEffect(() => {
+    const handleEnter = (event) => {
+      if (event.key !== 'Enter') return
+      const screen = document.querySelector('.welcome-screen')
+      if (!screen?.classList.contains('is-ready') || screen.classList.contains('is-exiting')) return
+      screen.classList.add('is-exiting')
+    }
+
+    window.addEventListener('keydown', handleEnter)
+    return () => window.removeEventListener('keydown', handleEnter)
+  }, [])
+
   return (
     <main className="welcome-screen">
       <div className="model-background" aria-hidden="true">
