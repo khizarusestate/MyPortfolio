@@ -25,7 +25,7 @@ body{min-width:320px;font-family:'Poppins',sans-serif}
 .welcome-screen.is-ready .icon-star{animation:spark-travel 850ms cubic-bezier(.16,1,.3,1) var(--spark-delay) both,spark-fade 350ms ease 5.65s both}
 .welcome-screen.is-ready .react-item .icon-star{animation:react-spark-travel 850ms cubic-bezier(.16,1,.3,1) 0.6s both,spark-fade 350ms ease 5.65s both}
 .welcome-screen.is-ready .tech-icon{animation:icon-materialize 600ms cubic-bezier(.2,.8,.25,1) 5.85s both,icon-idle 5s ease-in-out 6.5s infinite}
-.welcome-screen.is-exiting .welcome-overlay,.welcome-screen.is-exiting .model-background{animation:screen-exit 700ms ease-in forwards!important}
+.welcome-screen.is-exiting .welcome-overlay{animation:screen-exit 700ms ease-in forwards!important}
 @keyframes spark-travel{
 0%{opacity:0;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(.15);background:#fff;box-shadow:0 0 0 0 #fff}
 18%{opacity:1;transform:translate(calc(-50% + var(--spark-start-x)),-50%) scale(1.7);background:#fff;box-shadow:0 0 10px 5px #fff,0 0 30px 15px currentColor,0 0 65px 30px currentColor}
