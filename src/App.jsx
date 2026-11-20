@@ -14,8 +14,8 @@ function Character({ onLoaded }) {
   useEffect(() => {
     scene.traverse((object) => {
       if (!object.isMesh) return
-      object.castShadow = false
-      object.receiveShadow = false
+      object.castShadow = true
+      object.receiveShadow = true
 
       const materials = Array.isArray(object.material)
         ? object.material
@@ -103,18 +103,20 @@ function ModelScene({ onLoaded, cameraView }) {
       shadows={false}
       gl={{
         antialias: false,
-        alpha: false,
+        alpha: true,
         powerPreference: 'high-performance',
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.05,
+        toneMappingExposure: 1.12,
+      shadowMap: { enabled: true, type: THREE.PCFSoftShadowMap },
       }}
     >
       <CameraRig view={cameraView} />
-      <color attach="background" args={['#000000']} />
-      <ambientLight intensity={0.75} />
-      <hemisphereLight skyColor="#dce8ff" groundColor="#17111a" intensity={0.65} />
-      <directionalLight position={[-2.5, 4, 4]} intensity={1.8} color="#fff0e5" />
-      <directionalLight position={[3, 1.5, 2]} intensity={0.65} color="#8eafff" />
+      <ambientLight intensity={0.52} />
+      <hemisphereLight skyColor="#b9d0ee" groundColor="#090d18" intensity={0.82} />
+      <directionalLight position={[-2.5, 4, 4]} intensity={2.05} color="#fff0e5" castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-camera-near={0.1} shadow-camera-far={8} shadow-bias={-0.00015} shadow-normalBias={0.025} />
+      <directionalLight position={[3, 1.5, 2]} intensity={0.9} color="#8eafff" />
+      <directionalLight position={[0.5, 2.8, -3]} intensity={1.25} color="#668fcf" />
+      <pointLight position={[-2, 1.8, -1.5]} intensity={0.65} distance={5} color="#315b9a" />
       <Suspense fallback={null}>
         <Character onLoaded={onLoaded} />
       </Suspense>
