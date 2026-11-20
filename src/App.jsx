@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Component, Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment, useAnimations, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -11,62 +11,14 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { VignetteShader } from 'three/addons/shaders/VignetteShader.js'
 
 const MODEL_URL =
+  'https://grab3d.com/dl/man-base-character/man-base-character.glb'
+const FALLBACK_MODEL_URL =
   'https://cdn.jsdelivr.net/gh/memoriesrohit/avatar-studio@main/models/daniel_formal.glb'
 
-function CinematicPostProcessing() {
-  const composer = useRef()
-  const { gl, scene, camera, size } = useThree()
-
-  useEffect(() => {
-    const pipeline = new EffectComposer(gl)
-    pipeline.addPass(new RenderPass(scene, camera))
-
-    const ambientOcclusion = new SSAOPass(scene, camera, size.width, size.height)
-    ambientOcclusion.kernelRadius = 12
-    ambientOcclusion.minDistance = 0.001
-    ambientOcclusion.maxDistance = 0.12
-    pipeline.addPass(ambientOcclusion)
-
-    const bloom = new UnrealBloomPass(
-      new THREE.Vector2(size.width, size.height),
-      0.16,
-      0.38,
-      0.92,
-    )
-    pipeline.addPass(bloom)
-
-    const vignette = new ShaderPass(VignetteShader)
-    vignette.uniforms.offset.value = 0.28
-    vignette.uniforms.darkness.value = 0.72
-    pipeline.addPass(vignette)
-    pipeline.addPass(new OutputPass())
-
-    pipeline.setPixelRatio(gl.getPixelRatio())
-    pipeline.setSize(size.width, size.height)
-    composer.current = pipeline
-
-    return () => {
-      pipeline.dispose()
-      composer.current = undefined
-    }
-  }, [gl, scene, camera])
-
-  useEffect(() => {
-    composer.current?.setSize(size.width, size.height)
-  }, [size.width, size.height])
-
-  useFrame(() => {
-    composer.current?.render()
-  }, 1)
-
-  return null
-}
-
-function HumanCharacter({ onLoaded }) {
+function HighDetailCharacter({ onLoaded }) {
   const group = useRef()
   const { gl } = useThree()
-  const { scene, animations } = useGLTF(MODEL_URL)
-  const { actions } = useAnimations(animations, group)
+  const { scene } = useGLTF(MODEL_URL)
 
   useEffect(() => {
     const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
@@ -85,22 +37,20 @@ function HumanCharacter({ onLoaded }) {
         Object.values(material).forEach((value) => {
           if (value?.isTexture) value.anisotropy = maxAnisotropy
         })
+        if (material.isMeshStandardMaterial) {
+          material.envMapIntensity = 1.1
+        }
         material.needsUpdate = true
       })
     })
 
-    const idle = actions.Idle ?? Object.values(actions)[0]
-    idle?.reset().fadeIn(0.7).play()
     onLoaded()
-
-    return () => {
-      idle?.fadeOut(0.3)
-    }
-  }, [actions, gl, onLoaded, scene])
+  }, [gl, onLoaded, scene])
 
   useFrame(({ clock }) => {
     if (!group.current) return
     group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
+    group.current.rotation.y = Math.sin(clock.elapsedTime * 0.22) * 0.008
   })
 
   return (
@@ -108,6 +58,54 @@ function HumanCharacter({ onLoaded }) {
       <primitive object={scene} />
     </group>
   )
+}
+
+function OriginalCharacter({ onLoaded }) {
+  const group = useRef()
+  const { gl } = useThree()
+  const { scene, animations } = useGLTF(FALLBACK_MODEL_URL)
+  const { actions } = useAnimations(animations, group)
+
+  useEffect(() => {
+    const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
+    scene.traverse((object) => {
+      if (!object.isMesh) return
+      object.castShadow = true
+      object.receiveShadow = true
+      const materials = Array.isArray(object.material) ? object.material : [object.material]
+      materials.forEach((material) => {
+        if (!material) return
+        Object.values(material).forEach((value) => {
+          if (value?.isTexture) value.anisotropy = maxAnisotropy
+        })
+      })
+    })
+    const idle = actions.Idle ?? Object.values(actions)[0]
+    idle?.reset().fadeIn(0.7).play()
+    onLoaded()
+    return () => idle?.fadeOut(0.3)
+  }, [actions, gl, onLoaded, scene])
+
+  useFrame(({ clock }) => {
+    if (group.current) {
+      group.current.position.y = -0.065 + Math.sin(clock.elapsedTime * 1.05) * 0.002
+    }
+  })
+
+  return <group ref={group}><primitive object={scene} /></group>
+}
+
+class CharacterFallback extends Component {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  render() {
+    if (this.state.failed) return <OriginalCharacter onLoaded={this.props.onLoaded} />
+    return this.props.children
+  }
 }
 
 function CameraAim() {
@@ -171,15 +169,18 @@ function ModelScene({ onLoaded }) {
       <SceneLighting />
       <Environment preset="studio" environmentIntensity={0.65} />
       <CameraAim />
-      <Suspense fallback={null}>
-        <HumanCharacter onLoaded={onLoaded} />
-      </Suspense>
+      <CharacterFallback onLoaded={onLoaded}>
+        <Suspense fallback={null}>
+          <HighDetailCharacter onLoaded={onLoaded} />
+        </Suspense>
+      </CharacterFallback>
       <CinematicPostProcessing />
     </Canvas>
   )
 }
 
 useGLTF.preload(MODEL_URL)
+useGLTF.preload(FALLBACK_MODEL_URL)
 
 export default function App() {
   const [modelLoaded, setModelLoaded] = useState(false)
