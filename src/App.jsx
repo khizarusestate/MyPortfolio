@@ -103,7 +103,7 @@ export default function App() {
         </div>
           <h1 className="welcome-text">Press Enter to Continue</h1>
         </div>
-        <p className="copyright-text">© 2026 Khizar Hayat<br />All Rights Reserved.</p>
+        <p className="copyright-text">© 2026 | All Rights Reserved.</p>
       </div>
     </main>
   )
