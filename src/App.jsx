@@ -81,7 +81,10 @@ export default function App() {
         <ModelScene onLoaded={handleModelLoaded} />
       </div>
       <div className="welcome-overlay">
-        <h1 className="welcome-text">Press Enter to Continue</h1>
+        <div className="welcome-copy">
+          <h2 className="welcome-heading">Welcome to My World</h2>
+          <h1 className="welcome-text">Press Enter to Continue</h1>
+        </div>
         <p className="copyright-text">© 2026 Khizar Hayat<br />All Rights Reserved.</p>
       </div>
     </main>
