@@ -70,7 +70,8 @@ body {
   align-items: center;
   justify-content: flex-end;
   gap: 22px;
-  margin-bottom: 16px;
+  margin-right: 12px;
+  margin-bottom: 24px;
   opacity: 0;
 }
 
@@ -98,7 +99,7 @@ body {
   margin: 0;
   color: #fff;
   font-family: 'Poppins', sans-serif;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
   text-align: right;
   opacity: 0;
@@ -146,7 +147,8 @@ body {
 
   .tech-icons {
     gap: 12px;
-    margin-bottom: 14px;
+    margin-right: 8px;
+    margin-bottom: 20px;
   }
 
   .tech-icon {
@@ -155,7 +157,7 @@ body {
   }
 
   .welcome-text {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .copyright-text {
