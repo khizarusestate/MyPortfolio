@@ -39,8 +39,6 @@ body {
   z-index: 0;
   background: #000;
   opacity: 0;
-  animation: welcome-fade-in 1.4s ease forwards;
-  animation-delay: 2s;
 }
 
 .human-canvas {
@@ -69,8 +67,6 @@ body {
   font-weight: 700;
   opacity: 0;
   transform: translate(-50%, calc(-50% + 25vh));
-  animation: welcome-fade-in 1.4s ease forwards;
-  animation-delay: 2s;
 }
 
 .copyright-text {
@@ -85,8 +81,12 @@ body {
   font-weight: 400;
   text-align: center;
   opacity: 0;
+}
+
+.welcome-screen.is-ready .model-background,
+.welcome-screen.is-ready .welcome-text,
+.welcome-screen.is-ready .copyright-text {
   animation: welcome-fade-in 1.4s ease forwards;
-  animation-delay: 2s;
 }
 
 @keyframes welcome-fade-in {
