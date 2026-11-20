@@ -51,11 +51,11 @@ function Character({ onLoaded }) {
 
 const CAMERA_VIEWS = [
   { position: [0, 1.43, 1.05], target: [0, 1.55, 0] },
-  { position: [-0.58, 1.43, 0.88], target: [0, 1.55, 0] },
-  { position: [0.58, 1.43, 0.88], target: [0, 1.55, 0] },
-  { position: [0, 1.86, 0.94], target: [0, 1.48, 0] },
-  { position: [0, 1.08, 0.98], target: [0, 1.58, 0] },
-  { position: [0.76, 1.48, 0.72], target: [0, 1.55, 0] },
+  { position: [-0.92, 1.43, 0.62], target: [0, 1.55, 0] },
+  { position: [0.92, 1.43, 0.62], target: [0, 1.55, 0] },
+  { position: [0, 2.12, 0.72], target: [0, 1.48, 0] },
+  { position: [0, 0.88, 0.78], target: [0, 1.58, 0] },
+  { position: [1.18, 1.52, 0.28], target: [0, 1.55, 0] },
 ]
 
 function CameraRig({ view }) {
@@ -70,10 +70,12 @@ function CameraRig({ view }) {
     targetLookAt.current.set(...preset.target)
   }, [view])
 
-  useFrame(() => {
-    camera.position.lerp(targetPosition.current, 0.055)
-    currentLookAt.current.lerp(targetLookAt.current, 0.055)
+  useFrame((_, delta) => {
+    const smooth = 1 - Math.exp(-3.2 * delta)
+    camera.position.lerp(targetPosition.current, smooth)
+    currentLookAt.current.lerp(targetLookAt.current, smooth)
     camera.lookAt(currentLookAt.current)
+    camera.updateProjectionMatrix()
   })
 
   return null
