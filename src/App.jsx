@@ -255,14 +255,7 @@ export default function App() {
             ))}
           </div>
 
-          <aside className={`menu-feature ${confirmed ? 'is-confirmed' : ''}`}>
-            <span className="feature-overline">SELECTED / {String(selectedIndex + 1).padStart(2, '0')}</span>
-            <div className="feature-rule" />
-            <h3>{selectedItem.title}</h3>
-            <p>{selectedItem.description}</p>
-            <span className="feature-detail">{selectedItem.detail}</span>
-            <div className="feature-bottom"><span>KHIZAR HAYAT</span><span>2026</span></div>
-          </aside>
+
         </div>
 
         <footer className="menu-footer">
