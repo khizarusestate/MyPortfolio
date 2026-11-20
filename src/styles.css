@@ -103,7 +103,7 @@ body {
   font-size: 13px;
   font-weight: 700;
   text-align: right;
-  transform: translateY(80px);
+  transform: translate(-100px, 80px);
   opacity: 0;
 }
 
