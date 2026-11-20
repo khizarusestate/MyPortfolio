@@ -24,24 +24,48 @@ body {
 
 .welcome-screen {
   position: relative;
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  min-height: 100svh;
+  overflow: hidden;
   background: #000;
   text-align: center;
   font-family: 'Poppins', sans-serif;
 }
 
+.model-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #000;
+}
+
+.human-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
 .welcome-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 32px);
   margin: 0;
   color: #e60046;
   font-family: 'Poppins', sans-serif;
   font-size: 20px;
   font-weight: 700;
   opacity: 0;
-  transform: translateY(25vh);
+  transform: translate(-50%, calc(-50% + 25vh));
   animation: welcome-fade-in 1.4s ease forwards;
   animation-delay: 2s;
 }
@@ -68,5 +92,11 @@ body {
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .welcome-text {
+    font-size: 20px;
   }
 }
