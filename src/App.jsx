@@ -35,7 +35,7 @@ function HumanCharacter({ onLoaded }) {
 
 function CameraAim() {
   useFrame(({ camera }) => {
-    camera.lookAt(0, 1.38, 0)
+    camera.lookAt(0, 1.52, 0)
   })
   return null
 }
