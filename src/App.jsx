@@ -40,7 +40,7 @@ function HumanHead() {
 
 function CameraAim() {
   useFrame(({ camera }) => {
-    camera.lookAt(0, 1.62, 0)
+    camera.lookAt(0, 1.3, 0)
   })
   return null
 }
@@ -60,7 +60,7 @@ function ModelScene() {
   return (
     <Canvas
       className="human-canvas"
-      camera={{ position: [0, 1.62, 0.78], fov: 27, near: 0.01, far: 20 }}
+      camera={{ position: [0, 1.35, 1.05], fov: 43, near: 0.01, far: 20 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false }}
     >
